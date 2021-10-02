@@ -91,3 +91,16 @@ Notice the error message: apparently something known as a provider is missing.
 You probably have seen a similar message before, it happens very commonly during development.
 
 Let's now understand exactly what this message means, and how to troubleshoot it.
+
+## What is an Angular Dependency Injection Provider?
+The error message "no provider" means simply that the Angular dependency injection system can't instantiate a given dependency, because it does not know how to create it.
+
+In order for Angular to know how to create a dependency such as for example the <code>ProduitService</code> instance injected in the <code>ProduitCardComponent</code> constructor, it needs what is known as a provider factory function.
+
+A provider factory function is simply a plain function that Angular can call in order to create a dependency, it's as simple as that: **it's just a function.** 👍
+
+That provider factory function can even be created implicitly by Angular using some simple conventions that we will talk about, and that is actually what usually happens for most of our dependencies.
+
+But we can also write that function ourselves if needed.
+
+In any case, it's important to understand that for every single dependency in your application, be it a service or a component or anything else, there is somewhere a plain function that is being called that knows how to create your dependency.
