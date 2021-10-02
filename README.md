@@ -85,7 +85,7 @@ As we can see, we are trying to inject an instance of this class as a dependency
 But our class is not linked to the Angular dependency injection system, so what part of our program will know how to call the <code>ProduitService</code> constructor to create an instance of that class and pass it as a dependency?
 
 The answer is simple: **nobody**, and so we will get an error! 😉<br>
-<code>NullInjectorError: No provider for CoursesService!</code><br>
+<code>NullInjectorError: No provider for ProduitService!</code><br>
 Notice the error message: apparently something known as a provider is missing.
 
 You probably have seen a similar message before, it happens very commonly during development.
