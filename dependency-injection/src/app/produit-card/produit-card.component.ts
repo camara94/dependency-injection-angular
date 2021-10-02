@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ProduitService } from './../services/produit-service';
+import { HttpClient } from '@angular/common/http';
+import { prodviderProduitServiceFactory } from './../services/own-provider'; 
 
 @Component({
   selector: 'app-produit-card',
@@ -8,13 +9,13 @@ import { ProduitService } from './../services/produit-service';
 })
 export class ProduitCardComponent implements OnInit {
 
-  constructor( private produitService: ProduitService ) { }
+  constructor( private http: HttpClient  ) { }
 
   ngOnInit(): void {
-    this.produitService
-        .getAllProduits()
-        .subscribe( produits => console.log(produits) );
-
+    prodviderProduitServiceFactory(this.http)
+    .getAllProduits()
+    .subscribe( produits => console.log( produits ) )
   }
-
 }
+
+

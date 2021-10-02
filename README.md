@@ -104,3 +104,26 @@ That provider factory function can even be created implicitly by Angular using s
 But we can also write that function ourselves if needed.
 
 In any case, it's important to understand that for every single dependency in your application, be it a service or a component or anything else, there is somewhere a plain function that is being called that knows how to create your dependency.
+
+## How to write our own provider?
+To really understand what a provider is, let's simply write our own provider factory function for the <code>ProduitService</code> class:
+<pre>
+<code>
+function ProduitServiceProviderFactory(http:HttpClient): ProduitService {
+  return new CoursesService(http);
+}
+</code>
+</pre>
+
+As you can see, this is just a plain function that takes as input any dependencies that <code>ProduitService</code> needs.
+
+This provider factory function will then call the <code>CoursesService</code>
+constructor manually, pass all the needed dependencies, and return the new <code>ProduitService</code> instance as the output.
+
+So any time that the Angular dependency injection system needs an instance of <code>ProduitService</code>, all it needs to do is to call this function!
+
+This looks very simple, but the problem is the Angular dependency injection system does not know about this function yet.
+
+More important than that, even if Angular knew about this function, how would it know that it needs to call it to inject this particular dependency:
+
+I mean, there is no way for Angular to make the link between this injected instance of <code>ProduitService</code> and the provider factory function, right?
