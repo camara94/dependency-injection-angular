@@ -440,4 +440,29 @@ With this simplified notation, you won't even be aware that there are providers 
 
 But notice that just setting your provider like this won't work, because Angular will not know how to find the dependencies of this class (remember the <code>**deps**</code> property).
 
-For this to work, you need to also apply the Injectable() decorator to the service class:
+For this to work, you need to also apply the <code>**Injectable()**</code> decorator to the service class:
+
+<code>
+<pre>
+@Injectable()
+export class UserService() {
+   http: HttpClient;
+   constructor(http: HttpClient) {
+     this.http = http;
+   }
+...
+}
+</pre>
+</code>
+
+This decorator will tell Angular to try to find the dependencies for this class by inspecting the types of the constructor function arguments at runtime!
+
+So as you can see, this very simplified notation is how we usually use the Angular dependency injection system, without even thinking about all the nuts and bolts that are being used under the hood. 😉
+
+One thing to bear in mind is that the <code>useClass</code> option will not work with interface names, **it works only with class names**.
+
+This is because an interface is a **compile-time** only construct of the Typescript language, so the interface does not exist at runtime.
+
+This means that an interface name, unlike a class name (via its runtime constructor function) can't be used to uniquely identify a dependency type.
+
+Besides its base concepts of provider, dependencies and injection tokens, there are a few other things that are important to bear in mind about the Angular dependency injection system.

@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import { Inject } from '@angular/core';
+import { Inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { User } from './../shared/user';
 import { URL_TOKEN } from './url-token';
+
+@Injectable()
 export class UserService {
     http: HttpClient;
     constructor( 

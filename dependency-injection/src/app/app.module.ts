@@ -36,11 +36,12 @@ import { UserService } from './services/user-service';
       useFactory: categoryServiceProviderFactory,
       deps: [HttpClient, URL_TOKEN]
     },
-    {
+    UserService
+    /*{
       provide: UserService,
       useClass: UserService,
       deps: [HttpClient, URL_TOKEN]
-    }
+    }*/
   ],
   bootstrap: [AppComponent]
 })
