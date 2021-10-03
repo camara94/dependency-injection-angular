@@ -246,3 +246,15 @@ So now Angular knows what provider factory function to call to create the right 
 And with this, our application is now working correctly, no more errors! 😉
 
 I think now you have a good understanding of how the Angular dependency injection system works, but I guess you are probably thinking:
+
+## But why don't I ever have to configure providers manually?
+
+You see, even though you usually don't have to configure provider factory functions or injection tokens manually yourself, this is what is actually happening under the hood.
+
+For every single type of dependency of your application, be it a service, a component or something else, there is always a provider, and there is always an injection token, or some other mechanism of uniquely identifying a dependency type.
+
+This makes sense, because the constructors of your classes need to be called by some part of your system, and Angular always needs to know what dependency type to create, right?
+
+So even when you configure your dependencies in a simplified way, there is always a provider under the hood.
+
+To better understand this, let's progressively simplify the definition of our provider, until we reach something that you are much more used to.
