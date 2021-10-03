@@ -5,7 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ProduitCardComponent } from './produit-card/produit-card.component';
-import { PRODUIT_SERVICE_TOKEN, produitServiceFactory } from './services/prouit-service-factory';
+import { PRODUIT_SERVICE_TOKEN, produitServiceProviderFactory } from './services/prouit-service-provider-factory';
 import { urlFactory, URL_TOKEN } from './services/url-token';
 
 @NgModule({
@@ -21,7 +21,7 @@ import { urlFactory, URL_TOKEN } from './services/url-token';
   providers: [
     {
       provide: PRODUIT_SERVICE_TOKEN,
-      useFactory: produitServiceFactory,
+      useFactory: produitServiceProviderFactory,
       deps: [HttpClient]
     },
     {

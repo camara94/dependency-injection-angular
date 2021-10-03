@@ -1,5 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { PRODUIT_SERVICE_TOKEN } from '../services/prouit-service-factory';
+import { PRODUIT_SERVICE_TOKEN } from '../services/prouit-service-provider-factory';
 import { ProduitService } from './../services/produit-service';
 import { URL_TOKEN } from './../services/url-token';
 

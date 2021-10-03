@@ -148,3 +148,101 @@ This injection token object will be used to clearly identify our <code>ProduitSe
 The dependency injection token is an object, so in that sense it's unique, unlike a string for example.
 
 So this token object can be used to uniquely identify a set of dependencies.
+
+## How to manually configure a provider?
+Now that we have both the provider factory function and the injection token, we can configure a provider in the Angular dependency injection system, that will know how to create instances of  <code>ProduitService</code> if needed.
+
+The provider itself is simply a configuration object, that we pass on to the
+
+<code>providers</code>array of a module or component:
+<pre>
+<code>
+@NgModule({
+  imports: [
+    ...
+  ],
+  declarations: [
+    ...
+  ],
+  providers: [
+      {
+      provide: COURSES_SERVICE_TOKEN,
+      useFactory: produitServiceProviderFactory,
+      deps: [HttpClient]
+    }
+    ]
+})
+export class AppModule { }
+</code>
+</pre>
+
+As we can see, this manually configured provider needs the following things defined:
+
+* <code>**useFactory**</code>: this should contain a reference to the provider factory function, that Angular will call when needed to create dependencies and inject them
+* <code>**provide**</code>: this contains the injection token linked to this type of dependency. The injection token will help Angular determine when a given provider factory function should be called or not
+* <code>**deps**</code>: this array contains any dependencies that the <code>**useFactory**</code> function needs in order to run, in this case the HTTP client
+
+So now Angular knows how to create instances of <code>**ProduitService**</code>, right?
+
+Let's see what happens if we now try to inject an instance of <code>**ProduitService**</code> in our application:
+<pre>
+<code>
+@Component({
+    selector: 'app-produit-card',
+    templateUrl: './produit-card.component.html',
+    styleUrls: ['./produit-card.component.css']
+})
+export class ProduitCardComponent  {
+
+    constructor(private produitService: ProduitService) {
+      ...
+    }
+    ...
+}
+</code>
+</pre>
+
+We might be a bit surprised to see that the same error message still occurs:
+
+<pre>
+<code>
+NullInjectorError: No provider for ProduitService
+</code>
+</pre>
+
+So what is going on here? Didn't we just define the provider?
+
+Well, yes, but there is no way for Angular to know that it needs to use our particular provider factory function when attempting to create this dependency, right?
+
+So how do we make that link?
+
+We need to explicitly tell Angular that it should use our provider to create this dependency.
+
+We can do so by using the <code>**@Inject**</code> annotation, everywhere where <code>ProduitService</code> is being injected:
+
+<pre>
+<code>
+@Component({
+    selector: 'app-produit-card',
+    templateUrl: './produit-card.component.html',
+    styleUrls: ['./produit-card.component.css']
+})
+export class ProduitCardComponent  {
+
+    constructor( @Inject(PRODUIT_SERVICE_TOKEN) private produitService: ProduitService) {
+      ...
+    }
+    ...
+}
+</code>
+</pre>
+
+As we can see, the explicit use of the <code>**@Inject**</code> decorator allows us to tell Angular that in order to create this dependency, it needs to use the specific provider linked to the <code>**PRODUIT_SERVICE_TOKEN**</code> injection token.
+
+The injection token uniquely identifies a dependency type from the point of view of Angular, and that is how the dependency injection system knows what provider to use.
+
+So now Angular knows what provider factory function to call to create the right dependency, and it goes ahead and does just that.
+
+And with this, our application is now working correctly, no more errors! 😉
+
+I think now you have a good understanding of how the Angular dependency injection system works, but I guess you are probably thinking:
