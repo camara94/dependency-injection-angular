@@ -466,3 +466,29 @@ This is because an interface is a **compile-time** only construct of the Typescr
 This means that an interface name, unlike a class name (via its runtime constructor function) can't be used to uniquely identify a dependency type.
 
 Besides its base concepts of provider, dependencies and injection tokens, there are a few other things that are important to bear in mind about the Angular dependency injection system.
+
+## What are the advantages of Hierarchical Dependency Injection?
+
+Angular is typically used to build large applications, which in some cases can become quite large.
+
+## What are the advantages of Hierarchical Dependency Injection?
+
+Angular is typically used to build large applications, which in some cases can become quite large.
+
+One way to manage this complexity is to split up the application into many small well encapsulated modules, that are by themselves split up into a well-defined tree of components.
+
+These different sections of the page will need certain services and other dependencies to work, that they might or might not want to share with other sections of the application.
+
+We can imagine a well isolated section of our page that works in a completely independent way than the rest of the application, with its own local copies of a series of services and other dependencies that it needs.
+
+We want to ensure that these dependencies remain private and cannot be reached by the rest of the application, to avoid bugs and other maintenance issues.
+
+Some of the services that our isolated section of the application uses might be shared with other parts of the application, or with parent components that are further up in the component tree, while other dependencies are meant to be private.
+
+An hierarchical dependency injection system allows us to do just that! 👍
+
+With hierarchical dependency injection, we can isolate sections of the application and give them their own private dependencies not shared with the rest of the application, we can have parent components share certain dependencies with its child components only but not with the rest of the component tree, etc.
+
+An hierarchical dependency injection system allows us to build our system in a much more modular way, allowing us to share dependencies between different parts of the application only when and if we need to.
+
+This initial explanation is a good starting point, but to really understand how this all works, we need a complete example.
