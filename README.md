@@ -332,3 +332,112 @@ And with this, Angular knows what dependency to inject, and everything is workin
 So the good news is that we don't need, in most cases, to explicitly create an injection token.
 
 Let's now see how can we further simplify our provider.
+
+## Simplified configuration of providers: useClass
+Instead of explicitly defining a provider factory function with <code>**useFactory**</code>, we have other ways to tell Angular how to instantiate a dependency.
+
+In the case of our provider, we can use the <code>**useClass**</code> property.
+
+This way Angular will know that the value that we are passing is a valid constructor function, that Angular can simply call using the <code>**new**</code> operator:
+
+<pre>
+<code>
+@NgModule({
+  declarations: [
+    AppComponent,
+    ProduitCardComponent
+  ],
+  imports: [
+  BrowserModule,
+    AppRoutingModule,
+    HttpClientModule
+  ],
+  providers: [
+    {
+      provide: PRODUIT_SERVICE_TOKEN,
+      useFactory: produitServiceProviderFactory,
+      deps: [HttpClient]
+    },
+    {
+      provide: URL_TOKEN,
+      useFactory: urlFactory
+    },
+    {
+      provide: CategoryService,
+      useFactory: categoryServiceProviderFactory,
+      deps: [HttpClient, URL_TOKEN]
+    },
+    {
+      provide: UserService,
+      useClass: UserService,
+      deps: [HttpClient, URL_TOKEN]
+    }
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+</code>
+</pre>
+
+And this already greatly simplifies our provider, as we don't need to write a provider factory function manually ourselves! 👍
+
+Another super convenient feature of <code>**useClass**</code> is that for this type of dependencies, Angular will try to infer the injection token at runtime based on the value of the Typescript type annotations.
+
+This means that with <code>**useClass**</code> dependencies, we don't even need the<br>
+<code>**Inject**</code> decorator anymore, which explains why you rarely see it:
+
+<pre>
+<code>
+@Component({
+    selector: 'app-produit-card',
+    templateUrl: './produit-card.component.html',
+    styleUrls: ['./produit-card.component.css']
+})
+export class ProduitCardComponent  {
+
+    constructor(private userService: UserService) {
+      ...
+    }
+    ...
+}
+</code>
+</pre>
+
+So how does Angular know which dependency to inject?
+
+Angular can determine this by inspecting the type of the injected property which is <code>**UserService**</code>, and using that type to determine a provider for that dependency.
+
+As we can see, class dependencies are much more convenient to use, as opposed to having to use <code>**@Inject**</code> explicitly! 👍
+
+For the particular case of <code>**useClass**</code> providers, we can simplify this even further.
+
+Instead of defining a provider object manually, we can simply pass the name of the class itself as a valid provider configuration item:
+<pre>
+  <code>
+    @NgModule({
+  imports: [
+    ...
+  ],
+  declarations: [
+    ...
+  ],
+  providers: [
+    UserService
+  ]
+})
+export class appModule { }
+  </code>
+</pre>
+
+
+Angular will determine that this provider is a constructor function, so Angular will inspect the function, it will then create a factory function determine the necessary dependencies, and create an instance of the class on demand.
+
+And this happens implicitly just based on the name of the function.
+
+This is the notation that you usually use in most cases, which is super simplified and easy to use! 😉
+
+With this simplified notation, you won't even be aware that there are providers and injection tokens behind the scenes.
+
+But notice that just setting your provider like this won't work, because Angular will not know how to find the dependencies of this class (remember the <code>**deps**</code> property).
+
+For this to work, you need to also apply the Injectable() decorator to the service class:

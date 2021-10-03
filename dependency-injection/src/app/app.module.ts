@@ -9,6 +9,7 @@ import { PRODUIT_SERVICE_TOKEN, produitServiceProviderFactory } from './services
 import { urlFactory, URL_TOKEN } from './services/url-token';
 import { CategoryService } from './services/category-service';
 import { categoryServiceProviderFactory } from './services/category-service-provider-factory';
+import { UserService } from './services/user-service';
 
 @NgModule({
   declarations: [
@@ -16,7 +17,7 @@ import { categoryServiceProviderFactory } from './services/category-service-prov
     ProduitCardComponent
   ],
   imports: [
-    BrowserModule,
+  BrowserModule,
     AppRoutingModule,
     HttpClientModule
   ],
@@ -33,6 +34,11 @@ import { categoryServiceProviderFactory } from './services/category-service-prov
     {
       provide: CategoryService,
       useFactory: categoryServiceProviderFactory,
+      deps: [HttpClient, URL_TOKEN]
+    },
+    {
+      provide: UserService,
+      useClass: UserService,
       deps: [HttpClient, URL_TOKEN]
     }
   ],
