@@ -127,3 +127,24 @@ This looks very simple, but the problem is the Angular dependency injection syst
 More important than that, even if Angular knew about this function, how would it know that it needs to call it to inject this particular dependency:
 
 I mean, there is no way for Angular to make the link between this injected instance of <code>ProduitService</code> and the provider factory function, right?
+
+## Introduction to Injection Tokens
+So how does Angular know what to inject where, and what provider factory functions to call to create which dependency?
+
+Angular needs to be able to classify dependencies somehow, in order to identify that a given set of dependencies are **all of the same type**.
+
+In order to uniquely identify a category of dependencies, we can define what is known as an Angular injection token.
+
+Here is how we create our injection token manually, for our <code>ProduitService</code> dependency:
+<pre>
+<code>
+export const COURSES_SERVICE_TOKEN = 
+      new InjectionToken<ProduitService>("PRODUIT_SERVICE_TOKEN");
+</code>
+</pre>
+
+This injection token object will be used to clearly identify our <code>ProduitService</code> dependency in the dependency injection system.
+
+The dependency injection token is an object, so in that sense it's unique, unlike a string for example.
+
+So this token object can be used to uniquely identify a set of dependencies.

@@ -3,8 +3,10 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { ProduitCardComponent } from './produit-card/produit-card.component';
+import { PRODUIT_SERVICE_TOKEN, produitServiceFactory } from './services/prouit-service-factory';
+import { urlFactory, URL_TOKEN } from './services/url-token';
 
 @NgModule({
   declarations: [
@@ -16,7 +18,17 @@ import { ProduitCardComponent } from './produit-card/produit-card.component';
     AppRoutingModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [
+    {
+      provide: PRODUIT_SERVICE_TOKEN,
+      useFactory: produitServiceFactory,
+      deps: [HttpClient]
+    },
+    {
+      provide: URL_TOKEN,
+      useFactory: urlFactory
+    }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
