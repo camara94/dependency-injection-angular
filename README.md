@@ -258,3 +258,77 @@ This makes sense, because the constructors of your classes need to be called by 
 So even when you configure your dependencies in a simplified way, there is always a provider under the hood.
 
 To better understand this, let's progressively simplify the definition of our provider, until we reach something that you are much more used to.
+
+## Using class names as Injection Tokens
+One of the most interesting features of the Angular dependency injection system, is that you can use anything that is guaranteed to be unique in the Javascript runtime in order to identify a type of dependency, it doesn't have to be an explicit injection token object.
+
+For example, in the Javascript runtime, class names are represented by constructor functions, and a reference to a function like for example its name is guaranteed to be unique at runtime.
+
+A class name can then be uniquely represented at runtime by its constructor function, and because it's guaranteed to be unique, it can be used as an injection token.
+
+So we can simplify a bit the definition of our provider, by taking advantage of this powerful feature:
+
+<pre>
+<code>
+@NgModule({
+  declarations: [
+    AppComponent,
+    ProduitCardComponent
+  ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    HttpClientModule
+  ],
+  providers: [
+    {
+      provide: PRODUIT_SERVICE_TOKEN,
+      useFactory: produitServiceProviderFactory,
+      deps: [HttpClient]
+    },
+    {
+      provide: URL_TOKEN,
+      useFactory: urlFactory
+    },
+    {
+      provide: CategoryService,
+      useFactory: categoryServiceProviderFactory,
+      deps: [HttpClient, URL_TOKEN]
+    }
+  ],
+  bootstrap: [AppComponent]
+})
+export class AppModule { }
+</code>
+</pre>
+
+As we can see, we are no longer using the CATEGORY_SERVICE_TOKEN injection token object that we have manually created as a means to identify our dependency type.
+
+In fact, we have removed that object from our code base altogether, because for the particular case of service classes, we can use the class name itself to identify the dependency type!
+
+But if we try our program without any further modifications, we would get again the "*no provider*" error.
+
+In order to make things work again, you need to use the <code>**CategoryService**</code> constructor function to also identify which dependencies you need:
+
+<pre>
+<code>
+@Component({
+    selector: 'app-produit-card',
+    templateUrl: './produit-card.component.html',
+    styleUrls: ['./produit-card.component.css']
+})
+export class ProduitCardComponent  {
+
+    constructor( @Inject(CategoryService) private categoryService: CategoryService) {
+      ...
+    }
+    ...
+}
+</code>
+</pre>
+
+And with this, Angular knows what dependency to inject, and everything is working again as expected! 
+
+So the good news is that we don't need, in most cases, to explicitly create an injection token.
+
+Let's now see how can we further simplify our provider.
